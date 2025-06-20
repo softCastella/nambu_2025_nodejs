@@ -68,11 +68,14 @@ app.get("/posts",(req,res) => {
 app.get("/posts/:id", (req, res) => {
     const id = req.params.id;
     let sql = `
-        select id, title, content, author, createdAt, count
-        from posts where id =?
-        `
+    select id, title, content, author, createdAt, count
+    from posts where id =?
+    `
+    let ac_sql = `update posts set count = count + 1 where id=?`
     // from posts order by createdAt desc
+    db.prepare(ac_sql).run(id)
     const stmt = db.prepare(sql) //쿼리 준비
+
     const post = stmt.get(id)    //{}로 반환합니다 
     // const rows = stmt.all()      //쿼리 날려
     // console.log(rows)
